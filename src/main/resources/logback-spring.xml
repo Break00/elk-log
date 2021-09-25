@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <contextName>elk-log</contextName>
+
+    <!--引入默认配置-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <!--定义变量-->
+    <property name="logging.maxFileSize" value="10MB"></property>
+    <property name="logging.maxHistory" value="60"></property>
+    <property name="logging.totalSizeCap" value="20GB"></property>
+    <property name="logging.path" value="/home/logs"></property>
+    <property name="spring.application.name" value="elk-log"></property>
+    <property name="logging.pattern.file" value="${FILE_LOG_PATTERN}"></property>
+    <property name="logging.pattern.console" value="${CONSOLE_LOG_PATTERN}" ></property>
+
+    <!--格式化日志输出-->
+    <appender name="error-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${spring.application.name}/log_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${spring.application.name}/error/log-error-%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+            <maxFileSize>${logging.maxFileSize}</maxFileSize>
+            <maxHistory>${logging.maxHistory}</maxHistory>
+            <totalSizeCap>${logging.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${logging.pattern.file}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="warn-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${spring.application.name}/log_warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${spring.application.name}/warn/log-warn-%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+            <maxFileSize>${logging.maxFileSize}</maxFileSize>
+            <maxHistory>${logging.maxHistory}</maxHistory>
+            <totalSizeCap>${logging.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${logging.pattern.file}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>warn</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${spring.application.name}/all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${spring.application.name}/all/log-all-%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+            <maxFileSize>${logging.maxFileSize}</maxFileSize>
+            <maxHistory>${logging.maxHistory}</maxHistory>
+            <totalSizeCap>${logging.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${logging.pattern.file}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${logging.pattern.file}</pattern>
+        </encoder>
+    </appender>
+
+    <!--最基础的日志输出级别-->
+    <root level="INFO">
+        <appender-ref ref="error-file"/>
+        <appender-ref ref="warn-file"/>
+        <appender-ref ref="file"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</configuration>
